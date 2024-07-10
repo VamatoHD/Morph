@@ -1,0 +1,6 @@
+{
+  "name": "Morph",
+  "tree": {
+    "$path": "src"
+  }
+}
