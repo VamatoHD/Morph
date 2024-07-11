@@ -1,0 +1,12 @@
+{
+  "name": "Morph Testing",
+  "tree": {
+    "$className": "DataModel",
+    "ReplicatedStorage": {
+      "$className": "ReplicatedStorage",
+      "Morph": {
+        "$path": "src"
+      }
+    }
+  }
+}
