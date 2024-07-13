@@ -1,6 +1,9 @@
-local Animator = require(script.Animator)
+--!strict
 
-local Morph = table.freeze({
+local Animator = require(script.Animator)
+local Types = require(script.Types)
+
+local Morph: Types.Morph = table.freeze({
 	new = Animator.new,
 })
 

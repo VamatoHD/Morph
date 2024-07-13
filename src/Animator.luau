@@ -1,25 +1,14 @@
+--!strict
+
 local TweenService = game:GetService("TweenService")
 
-local Animator = {}
+local Types = require(script.Parent.Types)
+
+local Animator: Types.AnimatorImpl = {} :: Types.AnimatorImpl
 Animator.__index = Animator
 
-export type State = {
-	Id : string | number,
-	Info : TweenInfo?,
-	Goal : {[string]:any}
-}
-
-export type Animation = {
-	Object: Instance,
-	_isRunning: boolean,
-	_Conn : RBXScriptConnection?,
-	_States: {[string] : State},
-	_Current: string | number | nil,
-	_Tween:Tween?
-}
-
-function Animator.new(Object: Instance)
-	local self: Animation = {
+function Animator.new(Object: Instance): Types.Animator
+	local self: Types.Animation = {
 		Object = Object,
 
 		_isRunning = false,
@@ -28,18 +17,18 @@ function Animator.new(Object: Instance)
 		_States = {},
 		_Current = nil,
 
-		_Tween = nil
+		_Tween = nil,
 	}
 
 	return setmetatable(self, Animator)
 end
 
-function Animator:AddState(value:State): Animation
-	local id = value["Id"]
+function Animator:AddState(value: Types.State): Types.Animator
+	local id: Types.Id? = value["Id"]
 
 	assert(type(id) == "string" or type(id) == "number", "Id must be a string or a number.")
 
-	self._States[id] = table.clone(value)
+	self._States[id :: Types.Id] = table.clone(value)
 
 	return self
 end
@@ -61,11 +50,10 @@ function Animator:Stop()
 	return self
 end
 
-function Animator:Play(Id : string | number ,Callback:((Instance)->nil)?)
-
+function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?)
 	assert(type(Id) == "string" or type(Id) == "number", "Id must be a string or a number.")
 
-	local state : State? = self["_States"][Id]
+	local state: Types.State? = self["_States"][Id]
 
 	assert(state ~= nil, "State not found.")
 
@@ -73,22 +61,18 @@ function Animator:Play(Id : string | number ,Callback:((Instance)->nil)?)
 		self:Stop()
 	end
 
-	self["_Tween"] = TweenService:Create(
-		self["Object"],
-		state["Info"] or TweenInfo.new(),
-		state["Goal"]
-	)
+	self["_Tween"] = TweenService:Create(self["Object"], state["Info"] or TweenInfo.new(), state["Goal"])
 
-	self["_Conn"] = self["_Tween"].Completed:Once(function()
+	self["_Conn"] = (self["_Tween"] :: Tween).Completed:Once(function()
 		if Callback then
-			pcall(Callback,self["Object"])
+			pcall(Callback, self["Object"])
 		end
 		self:Stop()
 	end)
 
 	self["_Current"] = Id
-	self["_isRunning"] = true
-	self["_Tween"]:Play()
+	self["_isRunning"] = true;
+	(self["_Tween"] :: Tween):Play()
 
 	return self
 end

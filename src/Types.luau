@@ -1,0 +1,39 @@
+--!strict
+
+export type Id = string | number
+
+export type State = {
+	Id: Id,
+	Info: TweenInfo?,
+	Goal: { [string]: any },
+}
+
+--[[
+	I have no clue what I am doing with types
+	I have to refactor them.
+]]
+
+export type Animation = {
+	Object: Instance,
+	_isRunning: boolean,
+	_Conn: RBXScriptConnection?,
+	_States: { [Id]: State },
+	_Current: Id?,
+	_Tween: Tween?,
+}
+
+export type Animator = typeof(setmetatable({} :: Animation, {} :: AnimatorImpl))
+
+export type AnimatorImpl = {
+	__index: AnimatorImpl,
+	new: (Object: Instance) -> Animator,
+	AddState: (self: Animator, value: State) -> Animator,
+	Stop: (self: Animator) -> Animator,
+	Play: (self: Animator, Id: Id, Callback: ((Instance) -> nil)?) -> Animator,
+}
+
+export type Morph = {
+	new: (Object: Instance) -> Animator,
+}
+
+return nil
