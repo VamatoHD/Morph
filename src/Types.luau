@@ -16,6 +16,7 @@ export type State = {
 export type Animation = {
 	Object: Instance,
 	_isRunning: boolean,
+	_isPaused: boolean,
 	_Conn: RBXScriptConnection?,
 	_States: { [Id]: State },
 	_Current: Id?,
@@ -29,7 +30,10 @@ export type AnimatorImpl = {
 	new: (Object: Instance) -> Animator,
 	AddState: (self: Animator, value: State) -> Animator,
 	Stop: (self: Animator) -> Animator,
+	Pause: (self: Animator) -> Animator,
+	Resume: (self: Animator) -> Animator,
 	Play: (self: Animator, Id: Id, Callback: ((Instance) -> nil)?) -> Animator,
+	Wait: (self: Animator, Time: number) -> Animator,
 }
 
 export type Morph = {

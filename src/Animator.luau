@@ -12,6 +12,7 @@ function Animator.new(Object: Instance): Types.Animator
 		Object = Object,
 
 		_isRunning = false,
+		_isPaused = false,
 		_Conn = nil,
 
 		_States = {},
@@ -33,7 +34,7 @@ function Animator:AddState(value: Types.State): Types.Animator
 	return self
 end
 
-function Animator:Stop()
+function Animator:Stop(): Types.Animator
 	if self["_Conn"] then
 		self["_Conn"]:Disconnect()
 		self["_Conn"] = nil
@@ -46,11 +47,34 @@ function Animator:Stop()
 
 	self["_Current"] = nil
 	self["_isRunning"] = false
+	self["_isPaused"] = false
 
 	return self
 end
 
-function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?)
+function Animator:Pause(): Types.Animator
+	if not self["_isRunning"] or not self["_Tween"] then
+		return self
+	end
+
+	self["_Tween"]:Pause()
+	self["_isPaused"] = true
+
+	return self
+end
+
+function Animator:Resume(): Types.Animator
+	if not self["_isPaused"] or not self["_Tween"] then
+		return self
+	end
+
+	self["_Tween"]:Play()
+	self["_isPaused"] = false
+
+	return self
+end
+
+function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?): Types.Animator
 	assert(type(Id) == "string" or type(Id) == "number", "Id must be a string or a number.")
 
 	local state: Types.State? = self["_States"][Id]
@@ -74,6 +98,13 @@ function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?)
 	self["_isRunning"] = true;
 	(self["_Tween"] :: Tween):Play()
 
+	return self
+end
+
+--For code readability
+function Animator:Wait(Time: number): Types.Animator
+	assert(type(Time) == "number", "Invalid number to wait.")
+	task.wait(Time)
 	return self
 end
 
