@@ -63,21 +63,17 @@ function Animator:Pause(): Types.Animator
 	return self
 end
 
-function Animator:Resume(): Types.Animator
-	if not self["_isPaused"] or not self["_Tween"] then
+function Animator:ForcePlay(Id: Types.Id?, Callback: ((Instance) -> nil)?): Types.Animator
+	if self["_isRunning"] and self["_isPaused"] and (Id == nil or self["_Current"] == Id) then
+		(self["_Tween"] :: Tween):Play()
+		self["_isPaused"] = false
+
 		return self
 	end
 
-	self["_Tween"]:Play()
-	self["_isPaused"] = false
-
-	return self
-end
-
-function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?): Types.Animator
 	assert(type(Id) == "string" or type(Id) == "number", "Id must be a string or a number.")
 
-	local state: Types.State? = self["_States"][Id]
+	local state: Types.State? = self["_States"][Id :: Types.Id]
 
 	assert(state ~= nil, "State not found.")
 
@@ -99,6 +95,14 @@ function Animator:Play(Id: Types.Id, Callback: ((Instance) -> nil)?): Types.Anim
 	(self["_Tween"] :: Tween):Play()
 
 	return self
+end
+
+function Animator:Play(Id: Types.Id?, Callback: ((Instance) -> nil)?): Types.Animator
+	if self["_isRunning"] and not self["_isPaused"] then
+		return self
+	end
+
+	return self:ForcePlay(Id :: Types.Id, Callback)
 end
 
 --For code readability

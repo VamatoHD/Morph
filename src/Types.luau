@@ -8,11 +8,6 @@ export type State = {
 	Goal: { [string]: any },
 }
 
---[[
-	I have no clue what I am doing with types
-	I have to refactor them.
-]]
-
 export type Animation = {
 	Object: Instance,
 	_isRunning: boolean,
@@ -32,7 +27,8 @@ export type AnimatorImpl = {
 	Stop: (self: Animator) -> Animator,
 	Pause: (self: Animator) -> Animator,
 	Resume: (self: Animator) -> Animator,
-	Play: (self: Animator, Id: Id, Callback: ((Instance) -> nil)?) -> Animator,
+	ForcePlay: (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator,
+	Play: (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator,
 	Wait: (self: Animator, Time: number) -> Animator,
 }
 
