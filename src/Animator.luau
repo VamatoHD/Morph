@@ -8,6 +8,8 @@ local Animator: Types.AnimatorImpl = {} :: Types.AnimatorImpl
 Animator.__index = Animator
 
 function Animator.new(Object: Instance): Types.Animator
+	assert(Object and Object:IsA("Instance"),"Invalid object.")
+
 	local self: Types.Animation = {
 		Object = Object,
 
