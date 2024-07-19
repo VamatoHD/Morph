@@ -1,3 +1,3 @@
-require(script.TestEz).TestBootstrap:run({
+require(script.Packages.testez).TestBootstrap:run({
     script:WaitForChild("Animator.spec")
 })

@@ -12,7 +12,10 @@
     "ServerScriptService":{
       "$className":"ServerScriptService",
       "MorphTest":{
-        "$path":"test"
+        "$path":"test",
+        "Packages": {
+          "$path":"Packages"
+        }
       }
     }
   }
