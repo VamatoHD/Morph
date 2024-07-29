@@ -3,12 +3,13 @@
 local TweenService = game:GetService("TweenService")
 
 local Types = require(script.Parent.Types)
+local Cycles = require(script.Parent.Functions.Cycles)
 
 local Animator: Types.AnimatorImpl = {} :: Types.AnimatorImpl
 Animator.__index = Animator
 
 function Animator.new(Object: Instance): Types.Animator
-	assert(Object and Object:IsA("Instance"),"Invalid object.")
+	assert(Object and Object:IsA("Instance"), "Invalid object.")
 
 	local self: Types.Animation = {
 		Object = Object,
@@ -21,6 +22,8 @@ function Animator.new(Object: Instance): Types.Animator
 		_Current = nil,
 
 		_Tween = nil,
+
+		_FinishBinds = {},
 	}
 
 	return setmetatable(self, Animator)
@@ -86,6 +89,11 @@ function Animator:ForcePlay(Id: Types.Id?, Callback: ((Instance) -> nil)?): Type
 	self["_Tween"] = TweenService:Create(self["Object"], state["Info"] or TweenInfo.new(), state["Goal"])
 
 	self["_Conn"] = (self["_Tween"] :: Tween).Completed:Once(function()
+		for _, params in self["_FinishBinds"] do
+			local play: Types.PlayFunction = params["ForcePlay"] and self.ForcePlay or self.Play
+			play(params["Other"], params["Id"] or Id, params["Callback"])
+		end
+
 		if Callback then
 			pcall(Callback, self["Object"])
 		end
@@ -111,6 +119,27 @@ end
 function Animator:Wait(Time: number): Types.Animator
 	assert(type(Time) == "number", "Invalid number to wait.")
 	task.wait(Time)
+	return self
+end
+
+function Animator:BindToFinish(value: Types.BindParams): Types.Animator
+	local other = value["Other"]
+
+	assert(other, "Invalid animator to bind.")
+	assert(other ~= self, "Cannot bind to itself.")
+	assert(getmetatable(other) == Animator, "Invalid type of animator to bind.")
+
+	self["_FinishBinds"][other] = value
+
+	if Cycles(self) then
+		warn("Possible binding cycle, tween may cycle forever.")
+	end
+
+	return self
+end
+
+function Animator:UnBind(Other: Types.Animator): Types.Animator
+	self["_FinishBinds"][Other] = nil
 	return self
 end
 

@@ -16,7 +16,17 @@ export type Animation = {
 	_States: { [Id]: State },
 	_Current: Id?,
 	_Tween: Tween?,
+	_FinishBinds: { [Animator]: BindParams },
 }
+
+export type BindParams = {
+	Other: Animator,
+	Id: Id?, -- If id is nil, pass the played id
+	Callback: ((Instance) -> nil)?,
+	ForcePlay: boolean?,
+}
+
+export type PlayFunction = (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator
 
 export type Animator = typeof(setmetatable({} :: Animation, {} :: AnimatorImpl))
 
@@ -27,9 +37,11 @@ export type AnimatorImpl = {
 	Stop: (self: Animator) -> Animator,
 	Pause: (self: Animator) -> Animator,
 	Resume: (self: Animator) -> Animator,
-	ForcePlay: (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator,
-	Play: (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator,
+	ForcePlay: PlayFunction,
+	Play: PlayFunction,
 	Wait: (self: Animator, Time: number) -> Animator,
+	BindToFinish: (self: Animator, value: BindParams) -> Animator,
+	UnBind: (self: Animator, Other: Animator) -> Animator,
 }
 
 export type Morph = {
