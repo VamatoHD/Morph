@@ -10,23 +10,22 @@ export type State = {
 
 export type Animation = {
 	Object: Instance,
-	_isRunning: boolean,
-	_isPaused: boolean,
+	PlaybackState: Enum.PlaybackState,
 	_Conn: RBXScriptConnection?,
 	_States: { [Id]: State },
 	_Current: Id?,
-	_Tween: Tween?,
+	_Tweens: { [Id]: Tween },
 	_FinishBinds: { [Animator]: BindParams },
 }
 
 export type BindParams = {
 	Other: Animator,
 	Id: Id?, -- If id is nil, pass the played id
-	Callback: ((Instance) -> nil)?,
+	Callback: ((Animator) -> nil)?,
 	ForcePlay: boolean?,
 }
 
-export type PlayFunction = (self: Animator, Id: Id?, Callback: ((Instance) -> nil)?) -> Animator
+export type PlayFunction = (self: Animator, Id: Id?, Callback: ((Animator) -> nil)?) -> Animator
 
 export type Animator = typeof(setmetatable({} :: Animation, {} :: AnimatorImpl))
 
@@ -34,14 +33,16 @@ export type AnimatorImpl = {
 	__index: AnimatorImpl,
 	new: (Object: Instance) -> Animator,
 	AddState: (self: Animator, value: State) -> Animator,
-	Stop: (self: Animator) -> Animator,
+	Cancel: (self: Animator) -> Animator,
 	Pause: (self: Animator) -> Animator,
-	Resume: (self: Animator) -> Animator,
 	ForcePlay: PlayFunction,
 	Play: PlayFunction,
 	Wait: (self: Animator, Time: number) -> Animator,
 	BindToFinish: (self: Animator, value: BindParams) -> Animator,
 	UnBind: (self: Animator, Other: Animator) -> Animator,
+	--helper functions
+	_stop: (self: Animator) -> Animator,
+	_getTween: (self: Animator, Id: Id?) -> Tween,
 }
 
 export type Morph = {

@@ -4,18 +4,8 @@
     "$className": "DataModel",
     "ReplicatedStorage": {
       "$className": "ReplicatedStorage",
-      "Morph" : {
-        "$path":"default.project.json"
-      }
-    },
-
-    "ServerScriptService":{
-      "$className":"ServerScriptService",
-      "MorphTest":{
-        "$path":"test",
-        "Packages": {
-          "$path":"Packages"
-        }
+      "Morph": {
+        "$path": "default.project.json"
       }
     }
   }
