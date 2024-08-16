@@ -1,5 +1,3 @@
---# selene: allow(unused_variable)
-
 local Morph = require(game.ReplicatedStorage.Morph)
 
 local Part = workspace:WaitForChild("TestPart")

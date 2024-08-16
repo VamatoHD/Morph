@@ -2,15 +2,15 @@
 
 Morph is a powerful TweenService wrapper module designed to simplify the management of tweens in Roblox.
 
-When dealing with a large number of tweens, Roblox's TweenService requires individual variables for each Tween, which can become difficult to manage. 
+When dealing with many tweens, Roblox's TweenService requires individual variables for each Tween, which can become difficult to manage. 
 <br>
 Morph addresses this issue by providing a container for states, streamlining the process and making your code cleaner and more organized.
 
 ### Features
 - State Management: Add and manage multiple tweens within a single container.
-- Easy Integration: Includes every tween function for easy mgration.
+- Easy Integration: Includes every tween function for easy migration.
 
-## Instalation
+## Installation
 
 1. Head to [releases](https://github.com/VamatoHD/Morph/releases)
 2. Download the latest version Morph.rbxm file
