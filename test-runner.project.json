@@ -7,6 +7,18 @@
       "Morph": {
         "$path": "default.project.json"
       }
+    },
+    "ServerScriptService": {
+      "$className": "ServerScriptService",
+      "$path": "tests"
+    },
+    "Workspace": {
+      "TestPart": {
+        "$className": "Part",
+        "$properties": {
+          "Anchored": true
+        }
+      }
     }
   }
 }
